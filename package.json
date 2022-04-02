@@ -1,0 +1,27 @@
+{
+  "name": "node_mongo",
+  "version": "1.0.0",
+  "description": "Mastering NodeJS",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/astadipati/mastering-nodejs.git"
+  },
+  "keywords": [
+    "Mastering",
+    "Nodejs"
+  ],
+  "author": "Edy",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/astadipati/mastering-nodejs/issues"
+  },
+  "homepage": "https://github.com/astadipati/mastering-nodejs#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
