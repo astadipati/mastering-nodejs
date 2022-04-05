@@ -1,10 +1,11 @@
 const errorHandler = (err, req, res, next) =>{
     // log for dev
     console.log(err.stack.red);
-
-    res.status(500).json({
+    //default error jika statusCode undefined maka otomatis 500
+    // tinggal dimainkan dibagian json isinya apa
+    res.status(err.statusCode||500).json({
         success: false,
-        error: err.message
+        error: err.message || 'Server Error'
     });
     // dan kita export module->diakses di server.js
 }

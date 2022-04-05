@@ -1,5 +1,7 @@
 // tambahkan model bootcamp objek
 const Bootcamp = require('../models/Bootcamps');
+// load errorResponse helper
+const ErrorResponse = require('../helper/errorResponse');
 
 // dalam controller = method
 // @desc    Get all bootcamps
@@ -30,7 +32,7 @@ exports.getBootcamp = async (req, res, next) =>{ //midleware function
     try {
         const bootcamp = await Bootcamp.findById(req.params.id);     
         if (!bootcamp) {
-            return res.status(400).json({success:false});
+             next(new ErrorResponse(`Bootcamp not found with id ${req.params.id}`,404));
         } 
         res.status(200).json({
             success: true, 
@@ -38,7 +40,7 @@ exports.getBootcamp = async (req, res, next) =>{ //midleware function
             data: bootcamp
         });
     } catch (err) {
-       next(err);
+       next(new ErrorResponse(`Bootcamp not found with id ${req.params.id}`,404));
     }
 }  
 
