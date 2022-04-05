@@ -1,3 +1,6 @@
+// tambahkan model bootcamp objek
+const Bootcamp = require('../models/Bootcamps');
+
 // dalam controller = method
 // @desc    Get all bootcamps
 // @route   GET /api/v1/bootcamp
@@ -20,8 +23,20 @@ exports.getBootcamp = (req, res, next) =>{ //midleware function
 // @route   POST /api/v1/bootcamp
 // @access  Private after login
 
-exports.createBootcamp = (req, res, next) =>{ //midleware function
-    res.status(200).json({success: true, msg: 'Create new bootcamps'});
+exports.createBootcamp = async (req, res, next) =>{ //midleware function
+    try {
+        // console.log(req.body); //jika hanya ini maka akan undefined di server js harus dimasukkan body parser yang sekarang sudah include di express
+        const bootcamp = await Bootcamp.create(req.body);
+        res.status(201).json({
+            success: true, 
+            data: bootcamp
+        });
+    } catch (err) {
+        res.status(400).json({
+            success: false,
+            detil_error: err
+        });
+    }
 }  
 
 // @desc    Update bootcamp

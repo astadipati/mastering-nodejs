@@ -17,6 +17,9 @@ const { ServerApiVersion } = require('mongodb');
 
 const app = express();
 
+// pengganti bodyparser sudah include di express
+app.use(express.json());
+
 // implemented kita ganti pakai morgan
 // app.use(logger);
 // @desc Dev logging midleware
@@ -34,9 +37,9 @@ app.listen(
     console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold)
 );
 
-// handle unhandled promise rejections
-process.on('unhandledRejection',(err, promise) => {
-    process.log(`Error: ${err.message}`.red);
-    // close server& exit process
-    server.close(()=>process.exit);
+//handle unhandled promise rejections
+process.on('unhandledRejection', (err, promise) => {
+    console.log(`Error: ${err.message}`.red.bold);
+    // close server & exit
+    server.close(()=> process.exit(1));
 });
