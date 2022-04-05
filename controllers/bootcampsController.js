@@ -38,10 +38,7 @@ exports.getBootcamp = async (req, res, next) =>{ //midleware function
             data: bootcamp
         });
     } catch (err) {
-        res.status(400).json({
-            success: false,
-            detil_error: err
-        });
+       next(err);
     }
 }  
 

@@ -4,6 +4,8 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 // colors
 const colors = require('colors');
+// error handler from middleware
+const erros = require('./middleware/error');
 // load DB
 const connectDB = require('./config/db');
 
@@ -29,6 +31,8 @@ if (process.env.NODE_ENV === 'development') {
 
 // routes
 app.use('/api/v1/bootcamps', bootcamps);
+// penggunaan errorhandler dibawah route wajib
+app.use(erros);
 
 const PORT = process.env.PORT ||5000;
 
