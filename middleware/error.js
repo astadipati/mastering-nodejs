@@ -29,7 +29,7 @@ const errorHandler = (err, req, res, next) =>{
         success: false,
         error: error.message || 'Server Error'
     });
-    // dan kita export module->diakses di server.js Menlo, Monaco, 'Courier New', monospace, 
+    // dan kita export module->diakses di server.js 
 }
 
 module.exports = errorHandler;
