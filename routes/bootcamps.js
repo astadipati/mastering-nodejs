@@ -5,9 +5,12 @@ const {
     getBootcamp,    
     createBootcamp,
     updateBootcamp,
-    deleteBootcamp
+    deleteBootcamp,
+    getBootcampInRadius
 } = require('../controllers/bootcampsController');
 const router = express.Router();
+// get radius
+router.route('/radius/:zipcode/:distance').get(getBootcampInRadius);
 
 // dan beginilah cara kita panggil routenya lebih rapi
 router
