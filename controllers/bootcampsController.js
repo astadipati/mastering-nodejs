@@ -14,9 +14,37 @@ const geocoder = require ('../helper/geocoder');
 
 exports.getBootcamps = asyncHandler (async (req, res, next) =>{ //midleware function
         let query;
-        let queryStr = JSON.stringify(req.query);
+        // copy req.query
+        let reqQuery = {...req.query};
+        // field to exclude
+        const removeFields = ['select','sort'];
+        // loop over removeFields and delete them from reqQuery
+        removeFields.forEach(param => delete reqQuery[param]);
+        // create query string
+        let queryStr = JSON.stringify(reqQuery);
+        // create operators (gte,lte, etc)
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
+        // finding resource
         query = Bootcamp.find(JSON.parse(queryStr));
+        // select fields
+        if (req.query.select) {
+            //doc mongo filtering pada url koma array menjadi spasi
+            // const fields = req.query.select.split(',');
+            // console.log(fields);
+            // setelah join 
+            const fields = req.query.select.split(',').join(' ');
+            // console.log(fields);
+            query = query.select(fields);
+        }
+        // Sort
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(',').join(' ');
+            query = query.sort(sortBy);
+        }else{
+            // default query berdasarkan createdAt DESC
+            query = query.sort('-createdAt');
+        }
+        // executing query
         const bootcamps = await query;      
 
         res.status(200).json({
