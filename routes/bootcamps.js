@@ -8,7 +8,15 @@ const {
     deleteBootcamp,
     getBootcampInRadius
 } = require('../controllers/bootcampsController');
+
+// load other resource router ==================================
+const courseRouter = require('./courses'); //ambil router coures
+
 const router = express.Router();
+
+// re-route into other resource routers ========================
+router.use('/:bootcampId/courses', courseRouter);
+
 // get radius
 router.route('/radius/:zipcode/:distance').get(getBootcampInRadius);
 

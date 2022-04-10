@@ -15,6 +15,7 @@ dotenv.config({path:'./config/config.env'});
 connectDB();
 // load routes files
 const bootcamps = require('./routes/bootcamps');
+const courses = require('./routes/courses');
 const { ServerApiVersion } = require('mongodb');
 
 const app = express();
@@ -29,8 +30,10 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 
-// routes
-app.use('/api/v1/bootcamps', bootcamps);
+// mount routes
+app.use('/api/v1/bootcamps', bootcamps); //ini yang akan dipanggil
+app.use('/api/v1/courses', courses);
+
 // penggunaan errorhandler dibawah route wajib
 app.use(erros);
 
