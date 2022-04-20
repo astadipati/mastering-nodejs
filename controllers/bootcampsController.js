@@ -25,7 +25,7 @@ exports.getBootcamps = asyncHandler (async (req, res, next) =>{ //midleware func
         // create operators (gte,lte, etc)
         queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match => `$${match}`);
         // finding resource
-        query = Bootcamp.find(JSON.parse(queryStr));
+        query = Bootcamp.find(JSON.parse(queryStr)).populate('courses');
         // select fields
         if (req.query.select) {
             //doc mongo filtering pada url koma array menjadi spasi
@@ -119,11 +119,15 @@ exports.updateBootcamp = asyncHandler (async (req, res, next) =>{ //midleware fu
 // @access  private
 
 exports.deleteBootcamp =asyncHandler (async (req, res, next) =>{ //midleware function
-        const bootcamp = await Bootcamp.findByIdAndDelete(req.params.id);
+        const bootcamp = await Bootcamp.findById(req.params.id);
+        
         res.status(200).json({success: true, msg: `Delete bootcamps ${req.params.id}`});
+        
         if (!bootcamp) {
             return res.status(400).json({success: false, msg:`Gagal Hapus Data`});
         }
+        bootcamp.remove();
+        res.status(200).json({success: true, data: {}});
 });  
 
 // @desc    Get bootcamps within a radius
