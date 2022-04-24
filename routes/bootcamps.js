@@ -10,6 +10,11 @@ const {
     bootcampPhotoUpload
 } = require('../controllers/bootcampsController');
 
+// model
+Bootcamp = require('../models/Bootcamps');
+// advancedResults
+const advancedResults = require('../middleware/advancedResult');
+
 // load other resource router ==================================
 const courseRouter = require('./courses'); //ambil router coures
 

@@ -17,6 +17,8 @@ connectDB();
 // load routes files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const auth = require('./routes/auth');
+
 const fileupload = require('express-fileupload');
 const { ServerApiVersion } = require('mongodb');
 
@@ -38,9 +40,10 @@ app.use(fileupload());
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-// mount routes
+// mount routes setelah di load diatas
 app.use('/api/v1/bootcamps', bootcamps); //ini yang akan dipanggil
 app.use('/api/v1/courses', courses);
+app.use('/api/v1/auth', auth);
 
 // penggunaan errorhandler dibawah route wajib
 app.use(erros);
