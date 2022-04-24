@@ -6,7 +6,8 @@ const {
     createBootcamp,
     updateBootcamp,
     deleteBootcamp,
-    getBootcampInRadius
+    getBootcampInRadius,
+    bootcampPhotoUpload
 } = require('../controllers/bootcampsController');
 
 // load other resource router ==================================
@@ -20,6 +21,8 @@ router.use('/:bootcampId/courses', courseRouter);
 // get radius
 router.route('/radius/:zipcode/:distance').get(getBootcampInRadius);
 
+// 
+router.route('/:id/photo').put(bootcampPhotoUpload);
 // dan beginilah cara kita panggil routenya lebih rapi
 router
 .route('/')

@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const dotenv = require('dotenv');
 // const logger = require('./middleware/logger');
@@ -16,6 +17,7 @@ connectDB();
 // load routes files
 const bootcamps = require('./routes/bootcamps');
 const courses = require('./routes/courses');
+const fileupload = require('express-fileupload');
 const { ServerApiVersion } = require('mongodb');
 
 const app = express();
@@ -29,6 +31,12 @@ app.use(express.json());
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
+
+// File uploading
+app.use(fileupload());
+// Set static folder
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // mount routes
 app.use('/api/v1/bootcamps', bootcamps); //ini yang akan dipanggil

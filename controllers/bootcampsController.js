@@ -1,3 +1,4 @@
+const path = require('path');
 // tambahkan model bootcamp objek
 const Bootcamp = require('../models/Bootcamps');
 // load errorResponse helper
@@ -5,6 +6,7 @@ const ErrorResponse = require('../helper/errorResponse');
 const asyncHandler = require('../middleware/async');
 // geocoder helper
 const geocoder = require ('../helper/geocoder');
+// const { path } = require('express/lib/application');
 
 
 // dalam controller = method
@@ -157,3 +159,55 @@ exports.getBootcampInRadius =asyncHandler (async (req, res, next) =>{ //midlewar
             data: bootcamps
         });
 });  
+
+// @desc    Upload phpto for bootcamp
+// @route   PUT /api/v1/bootcamp/:id/photo
+// @access  private
+
+exports.bootcampPhotoUpload =asyncHandler (async (req, res, next) =>{ //midleware function
+        const bootcamp = await Bootcamp.findById(req.params.id);
+        
+        if (!bootcamp) {
+            return next(
+                new ErrorResponse('id is not found', 404)
+            );
+        }        
+        if (!req.files) {
+            return next(
+                new ErrorResponse('Please uplaod a file',400)
+            );
+        }
+
+        // Make sure the image is a photo
+        const file = req.files.file;
+        // Validate photo
+        if (!file.mimetype.startsWith('image')) {
+             return next(
+                new ErrorResponse('Please select an image',400)
+            );
+        }
+        // console.log(file);
+        // Check File Size
+        const maks = process.env.MAX_FILE_UPLOAD;
+        if (file.size > maks) {
+            return next(
+                new ErrorResponse(`File must be under ${maks}`,400)
+            );
+        }
+        // Give a name
+        file.name = `photo_${bootcamp._id}${path.parse(file.name).ext}`;
+        // get filename
+        console.log(file.name);
+
+        // pindah file
+        file.mv(`${process.env.FILE_UPLOAD_PATH}/${file.name}`, async err => {
+            if (err) {
+                console.error(err);
+                return next(
+                    new ErrorResponse(`Ups something wrong`, 500)
+                );
+            }
+            await Bootcamp.findByIdAndUpdate(req.params.id, {photo: file.name});
+            res.status(200).json({success: true, data: file.name});
+        }); //titik koma bagian ini jangan lupa sebagai akhir dari proses
+}); 
