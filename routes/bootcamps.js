@@ -31,7 +31,7 @@ router.route('/:id/photo').put(bootcampPhotoUpload);
 // dan beginilah cara kita panggil routenya lebih rapi
 router
 .route('/')
-.get(getBootcamps)      //get all
+.get(advancedResults(Bootcamp, 'courses'), getBootcamps)      //get all with populate
 .post(createBootcamp)   //buat baru
 
 router.route('/:id')
