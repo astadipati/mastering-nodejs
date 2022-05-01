@@ -8,3 +8,5 @@ https://github.com/richardgirges/express-fileupload
 npm i express-fileupload
 
 npm i jsonwebtoken bcryptjs
+
+npm i cookie-parser

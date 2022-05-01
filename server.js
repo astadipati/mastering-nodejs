@@ -9,8 +9,6 @@ const colors = require('colors');
 const erros = require('./middleware/error');
 // load DB
 const connectDB = require('./config/db');
-
-
 // load env
 dotenv.config({path:'./config/config.env'});
 connectDB();
@@ -20,12 +18,17 @@ const courses = require('./routes/courses');
 const auth = require('./routes/auth');
 
 const fileupload = require('express-fileupload');
+const cookieParser = require('cookie-parser');
 const { ServerApiVersion } = require('mongodb');
 
 const app = express();
 
+// cookie parser
+app.use(cookieParser());
+
 // pengganti bodyparser sudah include di express
 app.use(express.json());
+
 
 // implemented kita ganti pakai morgan
 // app.use(logger);
