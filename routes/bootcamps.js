@@ -21,7 +21,10 @@ const courseRouter = require('./courses'); //ambil router coures
 const router = express.Router();
 
 // setup protected routes
-const {protect} = require('../middleware/auth');
+const {
+        protect,
+        authorize
+        } = require('../middleware/auth');
 
 // re-route into other resource routers ========================
 router.use('/:bootcampId/courses', courseRouter);
@@ -30,16 +33,16 @@ router.use('/:bootcampId/courses', courseRouter);
 router.route('/radius/:zipcode/:distance').get(getBootcampInRadius);
 
 // 
-router.route('/:id/photo').put(protect, bootcampPhotoUpload);
+router.route('/:id/photo').put(protect, authorize('publisher'), bootcampPhotoUpload);
 // dan beginilah cara kita panggil routenya lebih rapi
 router
 .route('/')
 .get(advancedResults(Bootcamp, 'courses'), getBootcamps)      //get all with populate
-.post(protect, createBootcamp)   //buat baru
+.post(protect, authorize('publisher'), createBootcamp)   //buat baru
 
 router.route('/:id')
 .get(getBootcamp)       //get single bootcamp
-.put(protect, updateBootcamp)    // update bootcamp
-.delete(protect, deleteBootcamp) // hapus bootcamp
+.put(protect, authorize('publisher','admin'), updateBootcamp)    // update bootcamp
+.delete(protect, authorize('publisher','admin'),deleteBootcamp) // hapus bootcamp
 
 module.exports = router; 

@@ -1,22 +1,25 @@
 const express = require('express');
 // setup protected routes
-const {protect} = require('../middleware/auth');
 const {
-    getCourses,
-    getCourse,
-    addCourse,
-    updateCourse,
-    deleteCourse
-} = require('../controllers/coursesController');
+        protect,
+        authorize
+      } = require('../middleware/auth');
+const {
+        getCourses,
+        getCourse,
+        addCourse,
+        updateCourse,
+        deleteCourse
+      } = require('../controllers/coursesController');
 
 const router = express.Router( {mergeParams:true});
 
 router.route('/')
     .get(getCourses)
-    .post(protect, addCourse);
+    .post(protect, authorize('publisher','admin'), addCourse);
 router.route('/:id')
     .get(getCourse)
-    .put(protect, updateCourse)
-    .delete(protect, deleteCourse);
+    .put(protect, authorize('publisher','admin'), updateCourse)
+    .delete(protect, authorize('publisher','admin'), deleteCourse);
 
 module.exports = router;
