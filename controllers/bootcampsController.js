@@ -95,7 +95,21 @@ exports.getBootcamp = asyncHandler(async (req, res, next) =>{ //midleware functi
 // @access  Private after login
 
 exports.createBootcamp = asyncHandler (async (req, res, next) =>{ //midleware function
-        const bootcamp = await Bootcamp.create(req.body);
+    // add user to req.body
+    req.body.user = req.user.id;
+   
+    // check for publish bootcamps only one
+    const publishBootcamp = await Bootcamp.findOne({user: req.user.id});
+
+    console.log(publishBootcamp);
+
+    // if the user is not an admin, they can only add one bootcamp
+    if (publishBootcamp && req.user.role != 'admin') {
+        return next(new ErrorResponse(`The user with ID ${req.user.id} has already published a bootcamp`, 400));
+    }
+
+    const bootcamp = await Bootcamp.create(req.body);
+
         res.status(201).json({
             success: true, 
             data: bootcamp

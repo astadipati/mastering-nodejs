@@ -100,6 +100,12 @@ const BootcampSchema = new mongoose.Schema({
   createdAt: {
     type: Date,
     default: Date.now
+  },
+  // relate to user
+   user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+    required: true
   }
 },{
   // create virtual
