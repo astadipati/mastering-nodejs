@@ -38,7 +38,7 @@ router.route('/:id/photo').put(protect, authorize('publisher'), bootcampPhotoUpl
 router
 .route('/')
 .get(advancedResults(Bootcamp, 'courses'), getBootcamps)      //get all with populate
-.post(protect, authorize('publisher'), createBootcamp)   //buat baru
+.post(protect, authorize('publisher','admin'), createBootcamp)   //buat baru
 
 router.route('/:id')
 .get(getBootcamp)       //get single bootcamp

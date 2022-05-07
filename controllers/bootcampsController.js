@@ -104,8 +104,8 @@ exports.createBootcamp = asyncHandler (async (req, res, next) =>{ //midleware fu
     console.log(publishBootcamp);
 
     // if the user is not an admin, they can only add one bootcamp
-    if (publishBootcamp && req.user.role != 'admin') {
-        return next(new ErrorResponse(`The user with ID ${req.user.id} has already published a bootcamp`, 400));
+    if (publishBootcamp && req.user.role != 'admin') { 
+        return next(new ErrorResponse(`The user with ID ${req.user.name} has already published a bootcamp`, 400));
     }
 
     const bootcamp = await Bootcamp.create(req.body);
@@ -121,26 +121,43 @@ exports.createBootcamp = asyncHandler (async (req, res, next) =>{ //midleware fu
 // @access  Private
 
 exports.updateBootcamp = asyncHandler (async (req, res, next) =>{ //midleware function
-        const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body,{
+        let bootcamp = await Bootcamp.findById(req.params.id);
+
+        if (!bootcamp) {
+            return res.status(400).json({success: false, msg:`Gagal Update`});
+        }
+        
+        // make sure user is bootcamp owner
+        if (bootcamp.user.toString() !== req.user.id && req.user.role !='admin') {
+            return next(
+                new ErrorResponse(
+                    `User ${req.user.name} is not authorized to update this bootcamp`, 401));
+        }
+
+        bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body,{
             new: true,
             runValidators: true
         });
         res.status(200).json({success: true, msg: `Update bootcamps ${req.params.id}`, data: bootcamp});
-        if (!bootcamp) {
-            return res.status(400).json({success: false, msg:`Gagal Update`});
-        }
 }); 
 // @desc    Delete bootcamp
 // @route   DELETE /api/v1/bootcamp/:id
 // @access  private
 
 exports.deleteBootcamp =asyncHandler (async (req, res, next) =>{ //midleware function
-        const bootcamp = await Bootcamp.findById(req.params.id);
+        let bootcamp = await Bootcamp.findById(req.params.id);
         
         res.status(200).json({success: true, msg: `Delete bootcamps ${req.params.id}`});
         
         if (!bootcamp) {
             return res.status(400).json({success: false, msg:`Gagal Hapus Data`});
+        }
+
+         // make sure user is bootcamp owner
+        if (bootcamp.user.toString() !== req.user.id && req.user.role !='admin') {
+            return next(
+                new ErrorResponse(
+                    `User ${req.user.name} is not authorized to delete this bootcamp`, 401));
         }
         bootcamp.remove();
         res.status(200).json({success: true, data: {}});
@@ -185,13 +202,21 @@ exports.bootcampPhotoUpload =asyncHandler (async (req, res, next) =>{ //midlewar
             return next(
                 new ErrorResponse('id is not found', 404)
             );
-        }        
+        }    
+        
+         // make sure user is bootcamp owner
+        if (bootcamp.user.toString() !== req.user.id && req.user.role !='admin') {
+            return next(
+                new ErrorResponse(
+                    `User ${req.user.name} is not authorized to delete this bootcamp`, 401));
+        }
+        
         if (!req.files) {
             return next(
                 new ErrorResponse('Please uplaod a file',400)
             );
         }
-
+        
         // Make sure the image is a photo
         const file = req.files.file;
         // Validate photo
